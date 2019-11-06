@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="ru.pavelnazaro.chat.controller.PrimaryController">
+    <MenuBar fx:id="menuBar">
+        <menus>
+            <Menu text="File">
+                <items>
+                    <MenuItem text="Exit" onAction="#handleExitAction"/>
+                </items>
+            </Menu>
+            <Menu text="Help">
+                <items>
+                    <MenuItem text="About" onAction="#handleAboutAction"/>
+                </items>
+            </Menu>
+        </menus>
+    </MenuBar>
+    <StackPane>
+        <BorderPane>
+            <center>
+                <VBox fx:id="authPanel">
+                    <Label text="Login:"/>
+                    <TextField
+                            prefWidth="240"
+                            onAction="#sendAuth"
+                            fx:id="loginField"
+                    />
+                    <Label text="Password:"/>
+                    <PasswordField
+                            prefWidth="240"
+                            onAction="#sendAuth"
+                            fx:id="passField"
+                    />
+                    <Button
+                            minWidth="80"
+                            text="Добавить"
+                            onAction="#sendAuth"
+                            fx:id="btnAuth"
+                    />
+                </VBox>
+            </center>
+        </BorderPane>
+        <GridPane fx:id="chatPanel" visible="false">
+            <ListView
+                    GridPane.rowIndex="0"
+                    GridPane.columnIndex="0"
+                    GridPane.rowSpan="2"
+                    fx:id="clientList"
+                    prefHeight="100.0"
+                    prefWidth="192.0"
+            />
+            <TextArea
+                    GridPane.rowIndex="0"
+                    GridPane.columnIndex="1"
+                    GridPane.columnSpan="2"
+                    focusTraversable="false"
+                    prefWidth="320"
+                    prefHeight="300"
+                    fx:id="chatTextArea"
+                    editable="false"
+            />
+            <TextField
+                    GridPane.rowIndex="1"
+                    GridPane.columnIndex="1"
+                    prefWidth="240"
+                    onAction="#sendMessage"
+                    fx:id="messageText"
+            />
+            <Button
+                    GridPane.rowIndex="1"
+                    GridPane.columnIndex="2"
+                    minWidth="80"
+                    text="Добавить"
+                    onAction="#sendMessage"
+                    fx:id="sendMessageButton"
+            />
+        </GridPane>
+    </StackPane>
+</VBox>
