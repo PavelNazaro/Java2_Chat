@@ -26,6 +26,7 @@ import static ru.pavelnazaro.chat.Message.createAuth;
 public class PrimaryController implements Initializable {
 
     private int limit = 10;
+    private final String pathToFile = "Client/src/main/resources/Chat History.txt";
 
     public static final String ALL_ITEM = "All";
 
@@ -47,9 +48,6 @@ public class PrimaryController implements Initializable {
     private String nickName;
 
     private IMessageService messageService;
-
-    private final String pathToFile = "Client/src/main/resources/Chat History.txt";
-    private final String pathToFileNew = "Client/src/main/resources/Chat History1.txt";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -79,12 +77,10 @@ public class PrimaryController implements Initializable {
 
             br.close();
 
-            if (stringArrayList.size() < limit){
-                limit = stringArrayList.size();
-            }
-
-            for (int i = limit-1; i >= 0; i--) {
-                addTextInChatTextArea(stringArrayList.get(i));
+            for (int i = 0; i < stringArrayList.size(); i++) {
+                if (i >= stringArrayList.size() - limit) {
+                    addTextInChatTextArea(stringArrayList.get(i));
+                }
             }
         }
         else {
@@ -140,26 +136,13 @@ public class PrimaryController implements Initializable {
 
     private void saveMessageInFile(String message) throws IOException {
         File file = new File(pathToFile);
-        File fileNew = new File(pathToFileNew);
         if (!file.exists()){
             file.createNewFile();
         }
-        if (!fileNew.exists()){
-            fileNew.createNewFile();
-        }
 
-        try (FileWriter writer = new FileWriter(fileNew, false)) {
+        try (FileWriter writer = new FileWriter(file, true)) {
             writer.write(nickName + ": " + message + System.lineSeparator());
-
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String str;
-            while ((str = br.readLine()) != null) {
-                writer.write(str + System.lineSeparator());
-            }
             writer.flush();
-            br.close();
-
-            fileNew.renameTo(file);
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
