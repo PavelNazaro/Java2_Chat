@@ -15,14 +15,17 @@ import ru.pavelnazaro.chat.Message;
 import ru.pavelnazaro.chat.controller.message.IMessageService;
 import ru.pavelnazaro.chat.controller.message.ServerMessageService;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import static ru.pavelnazaro.chat.Message.createAuth;
 
 public class PrimaryController implements Initializable {
+
+    private int limit = 10;
 
     public static final String ALL_ITEM = "All";
 
@@ -45,6 +48,9 @@ public class PrimaryController implements Initializable {
 
     private IMessageService messageService;
 
+    private final String pathToFile = "Client/src/main/resources/Chat History.txt";
+    private final String pathToFileNew = "Client/src/main/resources/Chat History1.txt";
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -52,6 +58,44 @@ public class PrimaryController implements Initializable {
         } catch (Exception e) {
             showError(e);
         }
+
+        try {
+            readFileHistoryMessage();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void readFileHistoryMessage() throws IOException {
+        File file = new File(pathToFile);
+        if (file.exists()) {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            ArrayList<String> stringArrayList = new ArrayList<>();
+            String str;
+            while ((str = br.readLine()) != null) {
+                stringArrayList.add(str);
+            }
+
+            br.close();
+
+            if (stringArrayList.size() < limit){
+                limit = stringArrayList.size();
+            }
+
+            for (int i = limit-1; i >= 0; i--) {
+                addTextInChatTextArea(stringArrayList.get(i));
+            }
+        }
+        else {
+            addTextInChatTextArea("История сообщений пуста.");
+        }
+        addTextInChatTextArea("------------------------");
+        addTextInChatTextArea("Новые сообщения:");
+    }
+
+    private void addTextInChatTextArea(String str) {
+        chatTextArea.appendText(str + System.lineSeparator());
     }
 
     private void showError(Exception e) {
@@ -78,17 +122,47 @@ public class PrimaryController implements Initializable {
     }
 
     @FXML
-    public void sendMessage(ActionEvent actionEvent) {
+    public void sendMessage(ActionEvent actionEvent) throws IOException {
         sendMessage();
     }
 
-    private void sendMessage() {
+    private void sendMessage() throws IOException {
         String message = messageText.getText();
         if (StringUtils.isNotBlank(message)) {
             chatTextArea.appendText(String.format("Я: %s%n", message));
+            saveMessageInFile(message);
+
             Message msg = buildMessage(message);
             messageService.sendMessage(msg);
             messageText.clear();
+        }
+    }
+
+    private void saveMessageInFile(String message) throws IOException {
+        File file = new File(pathToFile);
+        File fileNew = new File(pathToFileNew);
+        if (!file.exists()){
+            file.createNewFile();
+        }
+        if (!fileNew.exists()){
+            fileNew.createNewFile();
+        }
+
+        try (FileWriter writer = new FileWriter(fileNew, false)) {
+            writer.write(nickName + ": " + message + System.lineSeparator());
+
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String str;
+            while ((str = br.readLine()) != null) {
+                writer.write(str + System.lineSeparator());
+            }
+            writer.flush();
+            br.close();
+
+            fileNew.renameTo(file);
+
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -101,12 +175,14 @@ public class PrimaryController implements Initializable {
         return Message.createPublic(nickName, message);
     }
 
-    public void shutdown() {
+    public void shutdown() throws IOException {
         try {
             messageService.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        saveMessageInFile(nickName + " is offline");
+        Platform.exit();
     }
 
     @FXML
@@ -123,9 +199,10 @@ public class PrimaryController implements Initializable {
         chatPanel.setVisible(true);
     }
 
-    public void setNickName(String nickName) {
+    public void setNickName(String nickName) throws IOException {
         this.nickName = nickName;
         refreshWindowTitle(nickName);
+        saveMessageInFile(nickName + " is online");
     }
 
     private void refreshWindowTitle(String nickName) {
@@ -154,7 +231,8 @@ public class PrimaryController implements Initializable {
         alert.show();
     }
 
-    @FXML private void handleExitAction(ActionEvent event) {
+    @FXML private void handleExitAction(ActionEvent event) throws IOException {
+        saveMessageInFile(nickName + " is offline");
         Platform.exit();
     }
 }

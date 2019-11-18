@@ -9,7 +9,7 @@ public interface IMessageService extends Closeable {
 
     void sendMessage(Message message);
 
-    void processRetrievedMessage(Message message);
+    void processRetrievedMessage(Message message) throws IOException;
 
     @Override
     default void close() throws IOException {

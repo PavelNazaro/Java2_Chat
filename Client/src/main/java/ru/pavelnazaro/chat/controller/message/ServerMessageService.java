@@ -64,7 +64,7 @@ public class ServerMessageService implements IMessageService {
     }
 
     @Override
-    public void processRetrievedMessage(Message message) {
+    public void processRetrievedMessage(Message message) throws IOException {
         switch (message.command) {
             case AUTH_OK:
                 processAuthOk(message);
@@ -109,7 +109,7 @@ public class ServerMessageService implements IMessageService {
         chatTextArea.appendText(msgToView);
     }
 
-    private void processAuthOk(Message message) {
+    private void processAuthOk(Message message) throws IOException {
         primaryController.setNickName(message.authOkMessage.nickname);
         primaryController.showChatPanel();
     }
