@@ -27,7 +27,13 @@ public class AppChat extends Application {
         stage.setResizable(false);
 
         PrimaryController controller = loader.getController();
-        stage.setOnHidden(e -> controller.shutdown());
+        stage.setOnHidden(e -> {
+            try {
+                controller.shutdown();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
         stage.show();
     }
 }

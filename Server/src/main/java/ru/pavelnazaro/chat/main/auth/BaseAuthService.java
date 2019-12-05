@@ -1,7 +1,10 @@
 package ru.pavelnazaro.chat.main.auth;
 
+import ru.pavelnazaro.chat.main.log.Log;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
 public class BaseAuthService implements AuthService {
 
@@ -26,12 +29,12 @@ public class BaseAuthService implements AuthService {
 
     @Override
     public void start() {
-        System.out.println("Auth service is running");
+        Log.setLog(Level.INFO, "Auth service is running");
     }
 
     @Override
     public void stop() {
-        System.out.println("Auth service has stopped");
+        Log.setLog(Level.INFO, "Auth service has stopped");
     }
 
     @Override

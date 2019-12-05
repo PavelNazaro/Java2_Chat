@@ -3,6 +3,7 @@ package ru.pavelnazaro.chat.main.client;
 import ru.pavelnazaro.chat.Command;
 import ru.pavelnazaro.chat.Message;
 import ru.pavelnazaro.chat.main.MyServer;
+import ru.pavelnazaro.chat.main.log.Log;
 import ru.pavelnazaro.chat.message.AuthMessage;
 
 import java.io.DataInputStream;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
 
 public class ClientHandler {
 
@@ -51,7 +53,7 @@ public class ClientHandler {
     private void readMessages() throws IOException {
         while (true) {
             String clientMessage = in.readUTF();
-            System.out.printf("Message '%s' from client %s%n", clientMessage, clientName);
+            Log.setLog(Level.INFO, "Message '" + clientMessage + "' from client " + clientName + System.lineSeparator());
             Message m = Message.fromJson(clientMessage);
             switch (m.command) {
                 case PUBLIC_MESSAGE:
@@ -72,7 +74,7 @@ public class ClientHandler {
         try {
             socket.close();
         } catch (IOException e) {
-            System.err.println("Failed to close socket!");
+            Log.setLog(Level.SEVERE, "Failed to close socket!");
             e.printStackTrace();
         }
     }
@@ -87,7 +89,7 @@ public class ClientHandler {
                     try {
                         synchronized (this) {
                             if (clientName == null) {
-                                System.out.println("authentication is terminated caused by timeout expired");
+                                Log.setLog(Level.INFO, "authentication is terminated caused by timeout expired");
                                 sendMessage(Message.createAuthError("Истекло время ожидания подключения!"));
                                 Thread.sleep(100);
                                 socket.close();
@@ -133,7 +135,7 @@ public class ClientHandler {
         try {
             out.writeUTF(message);
         } catch (IOException e) {
-            System.err.println("Failed to send message to user " + clientName + " : " + message);
+            Log.setLog(Level.SEVERE, "Failed to send message to user " + clientName + " : " + message);
             e.printStackTrace();
         }
     }

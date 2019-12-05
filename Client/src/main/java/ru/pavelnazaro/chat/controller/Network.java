@@ -41,7 +41,13 @@ public class Network implements Closeable {
             try {
                 String message = inputStream.readUTF();
                 Message msg = Message.fromJson(message);
-                Platform.runLater(() -> messageService.processRetrievedMessage(msg));
+                Platform.runLater(() -> {
+                    try {
+                        messageService.processRetrievedMessage(msg);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
             } catch (Exception e) {
                 System.out.println("Соединение с сервером было разорвано!");
                 break;
