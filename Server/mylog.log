@@ -1,0 +1,22 @@
+дек. 05, 2019 11:17:41 PM ru.pavelnazaro.chat.main.log.Log setLog
+SEVERE: dfgfd
+дек. 05, 2019 11:17:41 PM ru.pavelnazaro.chat.main.log.Log setLog
+INFO: Server is running
+дек. 05, 2019 11:17:41 PM ru.pavelnazaro.chat.main.log.Log setLog
+INFO: Auth service is running
+дек. 05, 2019 11:17:41 PM ru.pavelnazaro.chat.main.log.Log setLog
+INFO: Awaiting client connection...
+дек. 05, 2019 11:53:10 PM ru.pavelnazaro.chat.main.log.Log setLog
+INFO: Client has connected
+дек. 05, 2019 11:53:10 PM ru.pavelnazaro.chat.main.log.Log setLog
+INFO: Awaiting client connection...
+дек. 05, 2019 11:54:42 PM ru.pavelnazaro.chat.main.log.Log setLog
+INFO: Client has connected
+дек. 05, 2019 11:54:42 PM ru.pavelnazaro.chat.main.log.Log setLog
+INFO: Awaiting client connection...
+дек. 05, 2019 11:54:48 PM ru.pavelnazaro.chat.main.log.Log setLog
+INFO: Message '{"command":"END"}' from client nick2
+
+дек. 05, 2019 11:54:56 PM ru.pavelnazaro.chat.main.log.Log setLog
+INFO: Message '{"command":"END"}' from client nick3
+

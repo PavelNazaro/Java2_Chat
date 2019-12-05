@@ -4,6 +4,7 @@ import ru.pavelnazaro.chat.Message;
 import ru.pavelnazaro.chat.main.auth.AuthService;
 import ru.pavelnazaro.chat.main.auth.BaseAuthService;
 import ru.pavelnazaro.chat.main.client.ClientHandler;
+import ru.pavelnazaro.chat.main.log.Log;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -11,6 +12,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 
 public class MyServer {
 
@@ -23,21 +25,23 @@ public class MyServer {
     private ServerSocket serverSocket = null;
 
     MyServer() {
-        System.out.println("Server is running");
 
         try {
+            Log.init();
+            Log.setLog(Level.INFO, "Server is running");
+
             serverSocket = new ServerSocket(PORT);
             authService.start();
             //noinspection InfiniteLoopStatement
             while (true) {
-                System.out.println("Awaiting client connection...");
+                Log.setLog(Level.INFO, "Awaiting client connection...");
                 Socket socket = serverSocket.accept();
-                System.out.println("Client has connected");
+                Log.setLog(Level.INFO, "Client has connected");
                 new ClientHandler(socket, this);
             }
 
         } catch (IOException e) {
-            System.err.println("Ошибка в работе сервера. Причина: " + e.getMessage());
+            Log.setLog(Level.SEVERE, "Ошибка в работе сервера. Причина: " + e.getMessage());
             e.printStackTrace();
         } finally {
             shutdownServer();

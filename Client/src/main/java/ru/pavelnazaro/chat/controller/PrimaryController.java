@@ -16,6 +16,7 @@ import ru.pavelnazaro.chat.controller.message.IMessageService;
 import ru.pavelnazaro.chat.controller.message.ServerMessageService;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,8 @@ import static ru.pavelnazaro.chat.Message.createAuth;
 public class PrimaryController implements Initializable {
 
     private int limit = 10;
-    private final String pathToFile = "Client/src/main/resources/Chat History.txt";
+    private final String pathToFile = "ChatHistory.txt";
+    private File file = new File(pathToFile);
 
     public static final String ALL_ITEM = "All";
 
@@ -59,13 +61,12 @@ public class PrimaryController implements Initializable {
 
         try {
             readFileHistoryMessage();
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             e.printStackTrace();
         }
     }
 
-    private void readFileHistoryMessage() throws IOException {
-        File file = new File(pathToFile);
+    private void readFileHistoryMessage() throws IOException, URISyntaxException {
         if (file.exists()) {
             BufferedReader br = new BufferedReader(new FileReader(file));
 
@@ -135,7 +136,7 @@ public class PrimaryController implements Initializable {
     }
 
     private void saveMessageInFile(String message) throws IOException {
-        File file = new File(pathToFile);
+        //File file = new File("/home/pavelnazaro/Yandex.Disk/Учеба GeekBrains/Java Core. Продвинутый уровень/ДЗ/Java2_Chat/Client/src/main/resources/ChatHistory.txt");
         if (!file.exists()){
             file.createNewFile();
         }
